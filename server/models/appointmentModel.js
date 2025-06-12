@@ -1,17 +1,24 @@
 const db = require('../config/db');
 
-function createAppointment(appointment, callback) {
+const AppointmentModel = {
+  create: (data, callback) => {
     const sql = `
-        INSERT INTO appointments (name, email, phone, date, time, message)
-        VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO appointments (name, email, phone, date, time, message)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
-    const values = [
-        appointment.name,
-        appointment.email,
-        appointment.phone,
-        appointment.date,
-        appointment.time,
-        appointment.message
-    ];
-    db.query(sql, values, callback);
-}
+    db.query(sql, [
+      data.name,
+      data.email,
+      data.phone,
+      data.date,
+      data.time,
+      data.message
+    ], callback);
+  },
+
+  getAll: (callback) => {
+    db.query('SELECT * FROM appointments ORDER BY created_at DESC', callback);
+  }
+};
+
+module.exports = AppointmentModel;
