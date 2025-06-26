@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - InkTime</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h2>Panel Admin</h2>
+  <div id="appointments"></div>
+
+  <script>
+    async function fetchAppointments() {
+      const res = await fetch('/api/appointments');
+      const rdvs = await res.json();
+      const container = document.getElementById('appointments');
+      container.innerHTML = "";
+      rdvs.forEach(rdv => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <p><strong>${rdv.nom}</strong> - ${rdv.date} à ${rdv.heure}</p>
+          <button onclick="deleteRdv(${rdv.id})">Supprimer</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function deleteRdv(id) {
+      const res = await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
+      if (res.ok) fetchAppointments();
+      else alert('Erreur suppression');
+    }
+
+    fetchAppointments();
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>

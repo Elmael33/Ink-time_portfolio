@@ -1,0 +1,109 @@
+/* Reset de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f5f5f5;
+  color: #222;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+h1, h2 {
+  margin-bottom: 1rem;
+  color: #111;
+}
+
+input, textarea, button {
+  font: inherit;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
+input:focus, textarea:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+header, section {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.cta {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  margin-top: 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.cta:hover {
+  background: #444;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.gallery img {
+  width: 200px;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Notification popup */
+.notification {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  z-index: 9999;
+  opacity: 0.95;
+  font-size: 0.9rem;
+}
+
+.notification.success {
+  background-color: #28a745;
+}
+
+.notification.error {
+  background-color: #dc3545;
+}

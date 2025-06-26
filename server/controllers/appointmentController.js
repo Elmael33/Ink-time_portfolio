@@ -1,4 +1,5 @@
 const Appointment = require('../models/appointmentModel');
+const { createEvent } = require('../utils/calendarService');
 const { sendConfirmationEmail } = require('../utils/sendEmail');
 
 exports.createAppointment = (req, res) => {
@@ -33,6 +34,26 @@ exports.createAppointment = (req, res) => {
     });
   });
 };
+
+try {
+      const start = `${date}T${heure}:00`;
+      const end = `${date}T${parseInt(heure.split(':')[0]) + 1}:00`;
+      await createEvent({
+        summary: `RDV Tattoo avec ${nom}`,
+        description,
+        start,
+        end
+      });
+      console.log('Événement Google Calendar ajouté');
+    } catch (calendarErr) {
+      console.error('Google Calendar :', calendarErr.message);
+    }
+
+    res.status(201).json({
+      message: 'Rendez-vous enregistré.',
+      id: result.insertId,
+      data: { nom, email, date, heure, description }
+    });
 
 exports.getAppointments = (req, res) => {
   Appointment.getAll((err, results) => {
