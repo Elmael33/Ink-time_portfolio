@@ -7,12 +7,11 @@ const AppointmentModel = {
       VALUES (?, ?, ?, ?, ?, ?)
     `;
     db.query(sql, [
-      data.name,
-      data.email,
-      data.phone,
+      data.nom,
+      data.email,,
       data.date,
-      data.time,
-      data.message
+      data.heure,
+      data.description
     ], callback);
   },
 
