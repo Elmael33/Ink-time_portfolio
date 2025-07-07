@@ -2,39 +2,64 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Réservation InkTime</title>
+  <title>Réservation - InkTime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h2>Prendre rendez-vous</h2>
-  <form id="appointmentForm">
-    <input type="text" name="nom" placeholder="Nom" required />
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="date" name="date" required />
-    <input type="time" name="heure" required />
-    <textarea name="description" placeholder="Description du tatouage" required></textarea>
-    <button type="submit">Réserver</button>
-  </form>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo">InkTime</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="index.html#gallery">Galerie</a></li>
+      <li><a href="reservation.html">Réservation</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero small">
+    <h1>Réserve ton rendez-vous</h1>
+    <p>Personnalise ton tattoo avec l’artiste</p>
+  </header>
+
+  <!-- Formulaire -->
+  <section class="form-section">
+    <form id="appointmentForm" enctype="multipart/form-data">
+      <input type="text" name="nom" placeholder="Nom" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="date" name="date" required />
+      <input type="time" name="heure" required />
+
+      <textarea name="description" placeholder="Description du tatouage" required></textarea>
+
+      <label for="image">Image de référence (optionnel)</label>
+      <input type="file" id="image" name="image" accept="image/*" />
+
+      <button type="submit">Réserver</button>
+    </form>
+  </section>
 
   <script>
     document.getElementById("appointmentForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const data = {
-        nom: e.target.nom.value,
-        email: e.target.email.value,
-        date: e.target.date.value,
-        heure: e.target.heure.value,
-        description: e.target.description.value,
-      };
-      const res = await fetch("/api/appointments", {
+      const formData = new FormData(e.target);
+
+      const res = await fetch("http://localhost:5000/api/appointments", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData
       });
-      if (res.ok) window.location.href = "confirmation.html";
-      else alert("Erreur lors de la prise de rendez-vous");
+
+      if (res.ok) {
+        window.location.href = "confirmation.html";
+      } else {
+        alert("Erreur lors de la prise de rendez-vous");
+      }
     });
   </script>
-  <script src="js/main.js"></script>
+
 </body>
 </html>

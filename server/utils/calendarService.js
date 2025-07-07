@@ -22,13 +22,14 @@ async function createEvent({ summary, description, start, end }) {
     end: { dateTime: end, timeZone: 'Europe/Paris' },
   };
 
-  const response = await calendar.events.insert({
-    calendarId: 'primary',
-    requestBody: event,
-  });
+  await calendar.events.insert({
+  calendarId: 'primary',
+  requestBody: event,
+});
 
-  return response.data;
+console.log('Événement ajouté à Google Calendar :', response.data);
+
+return response.data;
 }
 
 module.exports = { createEvent };
-

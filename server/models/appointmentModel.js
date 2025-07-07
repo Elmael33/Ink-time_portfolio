@@ -3,12 +3,12 @@ const db = require('../config/db');
 const AppointmentModel = {
   create: (data, callback) => {
     const sql = `
-      INSERT INTO appointments (name, email, phone, date, time, message)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO appointments (name, email, date, heure, message)
+      VALUES (?, ?, ?, ?, ?)
     `;
     db.query(sql, [
       data.nom,
-      data.email,,
+      data.email,
       data.date,
       data.heure,
       data.description

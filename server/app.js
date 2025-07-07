@@ -20,3 +20,7 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/calendar', require('./routes/calendar'));
+

@@ -7,7 +7,7 @@ const oAuth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URI
 );
 
-const code = '4/0AUJR-x5lKgeSm7qU7tFW_w4g2x9vpikltIB41lpmQUsVtU1vRYY4kPTbqK7ra8Etr0CQGQ';
+const code = ' ';
 
 oAuth2Client.getToken(code).then(({ tokens }) => {
   console.log('Refresh Token :', tokens.refresh_token);
