@@ -3,23 +3,24 @@ const Appointment = require('../models/appointmentModel');
 const { sendConfirmationEmail } = require('../utils/sendEmail');
 
 exports.createAppointment = async (req, res) => {
-  const { nom, email, date, heure, description } = req.body;
+  console.log('📥 Données reçues :', req.body);
+  const { nom, email, date, heure, message } = req.body;
 
-  if (!nom || !email || !date || !heure || !description) {
+  if (!nom || !email || !date || !heure || !message) {
     return res.status(400).json({ error: 'Tous les champs sont requis.' });
   }
 
   try {
     // Enregistrement DB
     const result = await new Promise((resolve, reject) => {
-      Appointment.create({ nom, email, date, heure, description }, (err, result) => {
+      Appointment.create({ nom, email, date, heure, message }, (err, result) => {
         if (err) reject(err);
         else resolve(result);
       });
     });
 
     // Envoi email
-    await sendConfirmationEmail(email, { date, heure, description });
+    await sendConfirmationEmail(email, { date, heure, message });
 
     // Création Google Calendar
     const start = `${date}T${heure}:00`;
@@ -28,7 +29,7 @@ exports.createAppointment = async (req, res) => {
 
     await createEvent({
       summary: `RDV Tattoo avec ${nom}`,
-      description,
+      message,
       start,
       end
     });
@@ -36,12 +37,12 @@ exports.createAppointment = async (req, res) => {
     res.status(201).json({
       message: 'Rendez-vous enregistré.',
       id: result.insertId,
-      data: { nom, email, date, heure, description }
+      data: { nom, email, date, heure, message }
     });
 
   } catch (err) {
   console.error('Erreur complète Google Calendar :', err); // log complet
-  res.status(500).json({ error: 'Erreur serveur' });
+  res.status(500).json({ error: 'Erreur serveur (RDV)' });
   }
 };
 
@@ -58,17 +59,17 @@ exports.getAppointments = (req, res) => {
 };
 
 exports.reserveAppointment = async (req, res) => {
-  const { date, time, description } = req.body;
+  const { date, time, message } = req.body;
 
-  const startDateTime = new Date(`${date}T${time}:00`);
-  const endDateTime = new Date(startDateTime.getTime() + 30 * 60000); // +30min
+  const start = new Date(`${date}T${time}:00`);
+  const end = new Date(start.getTime() + 30 * 60000); // +30min
 
   try {
     const event = await createEvent({
       summary: 'Rendez-vous Ink-Time',
-      description,
-      startTime: startDateTime.toISOString(),
-      endTime: endDateTime.toISOString(),
+      message,
+      start,
+      end,
     });
 
     res.status(200).json({ message: 'Réservation confirmée', eventLink: event.htmlLink });

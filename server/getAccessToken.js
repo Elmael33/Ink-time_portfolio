@@ -12,7 +12,7 @@ oauth2Client.setCredentials({
 });
 
 oauth2Client.getAccessToken().then(res => {
-  console.log('✅ ACCESS TOKEN :', res.token);
+  console.log(' ACCESS TOKEN :', res.token);
 }).catch(err => {
-  console.error('❌ Impossible de récupérer l’access_token :', err);
+  console.error(' Impossible de récupérer l’access_token :', err);
 });

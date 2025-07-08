@@ -44,22 +44,30 @@
   </section>
 
   <script>
-    document.getElementById("appointmentForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
+  document.getElementById("appointmentForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      const res = await fetch("http://localhost:5000/api/appointments", {
-        method: "POST",
-        body: formData
-      });
+    const data = {
+      nom: e.target.nom.value,
+      email: e.target.email.value,
+      date: e.target.date.value,
+      heure: e.target.heure.value,
+      message: e.target.description.value,
+    };
 
-      if (res.ok) {
-        window.location.href = "confirmation.html";
-      } else {
-        alert("Erreur lors de la prise de rendez-vous");
-      }
+    const res = await fetch("/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
-  </script>
+
+    if (res.ok) {
+      window.location.href = "confirmation.html";
+    } else {
+      alert("Erreur lors de la prise de rendez-vous");
+    }
+  });
+</script>
 
 </body>
 </html>

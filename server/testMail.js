@@ -13,11 +13,11 @@ transporter.sendMail({
   from: process.env.EMAIL_USER,
   to: "mael.salet33@gmail.com",
   subject: "Test Nodemailer",
-  text: "Si tu lis ça, c’est que ça marche 🍾",
+  text: "testing nodemailer",
 }, (err, info) => {
   if (err) {
-    console.error("❌ Erreur:", err);
+    console.error(" Erreur:", err);
   } else {
-    console.log("✅ Email envoyé:", info.response);
+    console.log(" Email envoyé:", info.response);
   }
 });

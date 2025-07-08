@@ -22,7 +22,7 @@ async function createEvent({ summary, description, start, end }) {
     end: { dateTime: end, timeZone: 'Europe/Paris' },
   };
 
-  await calendar.events.insert({
+  const response = await calendar.events.insert({
   calendarId: 'primary',
   requestBody: event,
 });
