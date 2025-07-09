@@ -2,37 +2,147 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin - InkTime</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <title>Dashboard Admin - InkTime</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      background-color: #2d5be3;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    main {
+      padding: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #f3f3f3;
+      font-size: 16px;
+    }
+
+    td a {
+      color: #2d5be3;
+      text-decoration: none;
+    }
+
+    .actions button {
+      padding: 8px 12px;
+      margin-right: 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .actions .validate {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .actions .delete {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .actions button:hover {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      th {
+        display: none;
+      }
+      td {
+        position: relative;
+        padding-left: 50%;
+        margin-bottom: 10px;
+      }
+      td::before {
+        position: absolute;
+        left: 16px;
+        font-weight: bold;
+        content: attr(data-label);
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>Panel Admin</h2>
-  <div id="appointments"></div>
 
-  <script>
-    async function fetchAppointments() {
-      const res = await fetch('/api/appointments');
-      const rdvs = await res.json();
-      const container = document.getElementById('appointments');
-      container.innerHTML = "";
-      rdvs.forEach(rdv => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <p><strong>${rdv.nom}</strong> - ${rdv.date} à ${rdv.heure}</p>
-          <button onclick="deleteRdv(${rdv.id})">Supprimer</button>
-        `;
-        container.appendChild(div);
-      });
-    }
+<header>Admin Dashboard</header>
 
-    async function deleteRdv(id) {
-      const res = await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
-      if (res.ok) fetchAppointments();
-      else alert('Erreur suppression');
-    }
+<main>
+  <table>
+    <thead>
+      <tr>
+        <th>Client</th>
+        <th>Date</th>
+        <th>Email</th>
+        <th>Description</th>
+        <th>Fichier</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Client">Ziri Houamdi</td>
+        <td data-label="Date">15/07/2025</td>
+        <td data-label="Email"><a href="mailto:lena.anderson@example.com">Zirihouamdi@gmail.com</a></td>
+        <td data-label="Description">Dragon</td>
+        <td data-label="Fichier"><a href="/uploads/design.jpg" download>design.jpg</a></td>
+        <td data-label="Actions" class="actions">
+          <button class="validate">Valider</button>
+          <button class="delete">Supprimer</button>
+        </tr>
+      <tr>
+        <td data-label="Client">Victoire Boutin</td>
+        <td data-label="Date">19/07/2025</td>
+        <td data-label="Email"><a href="mailto:lena.anderson@example.com">Victoire.boutin@gmail.com</a></td>
+        <td data-label="Description">Fleur</td>
+        <td data-label="Fichier"><a href="/uploads/design.jpg" download>design.jpg</a></td>
+        <td data-label="Actions" class="actions">
+          <button class="validate">Valider</button>
+          <button class="delete">Supprimer</button>
+      </tr>
+        <tr>
+        <td data-label="Client">Mario Balloteli</td>
+        <td data-label="Date">23/07/2025</td>
+        <td data-label="Email"><a href="mailto:lena.anderson@example.com">Mario.balotelli@gmail.com</a></td>
+        <td data-label="Description">Ballon d'or</td>
+        <td data-label="Fichier"><a href="/uploads/design.jpg" download>design.jpg</a></td>
+        <td data-label="Actions" class="actions">
+          <button class="validate">Valider</button>
+          <button class="delete">Supprimer</button>
+        </tr>
 
-    fetchAppointments();
-  </script>
-  <script src="js/main.js"></script>
+      <!-- d'autres lignes peuvent être générées dynamiquement -->
+    </tbody>
+  </table>
+</main>
+
 </body>
 </html>

@@ -14,6 +14,7 @@ exports.createAppointment = async (req, res) => {
     // Enregistrement DB
     const result = await new Promise((resolve, reject) => {
       Appointment.create({ nom, email, date, heure, message }, (err, result) => {
+        
         if (err) reject(err);
         else resolve(result);
       });
