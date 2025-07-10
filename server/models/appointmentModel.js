@@ -20,4 +20,8 @@ const AppointmentModel = {
   }
 };
 
+getAllAppointments: (callback) => {
+  db.query('SELECT * FROM appointments ORDER BY created_at DESC', callback);
+}
+
 module.exports = AppointmentModel;

@@ -312,3 +312,130 @@ form label {
   font-size: 0.95rem;
   margin: 0.5rem 0 0.2rem;
 }
+
+.calendar {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.day-column {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background-color: #fdfdfd;
+}
+
+.day-column h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #007BFF;
+}
+
+.time-slot {
+  display: block;
+  margin: 0.25rem auto;
+  padding: 0.5rem;
+  background: #007BFF;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 90%;
+}
+
+.time-slot:hover {
+  background: #0056b3;
+}
+
+.time-slot.disabled {
+  background: #ccc;
+  pointer-events: none;
+}
+
+.calendar {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.calendar-header button {
+  background: #fff;
+  border: 1px solid #ccc;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#weekDates {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  max-width: 900px;
+}
+
+.day-col {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.day-col h4 {
+  margin-bottom: 0.5rem;
+  color: #007BFF;
+  font-size: 0.9rem;
+}
+
+.time-btn {
+  display: block;
+  margin: 0.2rem auto;
+  padding: 0.4rem;
+  background: #f2f2f2;
+  color: #111;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  width: 80%;
+  transition: background 0.2s ease;
+}
+
+.time-btn:hover {
+  background: #007BFF;
+  color: white;
+}
+
+.time-btn.selected {
+  background: #28a745;
+  color: white;
+}
+
+.time-btn.disabled {
+  background: #ccc;
+  color: #666;
+  pointer-events: none;
+}
+
+.calendar-grid {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  overflow-x: auto;
+}

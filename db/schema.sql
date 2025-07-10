@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS appointments (
   date DATE NOT NULL,
   heure TIME NULL,
   message TEXT,
+  ALTER TABLE appointments ADD COLUMN phone VARCHAR(20);
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

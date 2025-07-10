@@ -7,5 +7,7 @@ router.post('/', upload.single('image'), appointmentController.createAppointment
 
 router.get('/', appointmentController.getAppointments);
 router.post('/reserve', appointmentController.reserveAppointment);
+router.delete('/:id', appointmentController.deleteAppointment);
+router.get('/disponibilites', appointmentController.apiGetAvailableSlots);
 
 module.exports = router;
