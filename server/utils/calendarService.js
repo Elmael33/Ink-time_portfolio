@@ -19,8 +19,8 @@ async function createEvent({ summary, description, start, end }) {
   const event = {
     summary,
     description,
-    start: { dateTime: start, timeZone: 'Europe/Paris' },
-    end: { dateTime: end, timeZone: 'Europe/Paris' },
+    start,  // 👈 PAS de modification ici
+    end     // 👈 PAS de modification ici
   };
 
   const response = await calendar.events.insert({

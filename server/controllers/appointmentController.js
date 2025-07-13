@@ -85,34 +85,35 @@ exports.validateAppointment = async (req, res) => {
   const id = req.params.id;
 
   AppointmentModel.getById(id, async (err, appointment) => {
-    if (err || !appointment) {
-      return res.status(404).json({ error: "Rendez-vous introuvable" });
-    }
+  if (err || !appointment) {
+    return res.status(404).json({ error: "Rendez-vous introuvable" });
+  }
 
-    try {
-      AppointmentModel.updateStatus(id, 'confirme', async (err) => {
-        if (err) return res.status(500).json({ error: 'Erreur update status' });
+  try {
+    AppointmentModel.updateStatus(id, 'confirme', async (err) => {
+      if (err) return res.status(500).json({ error: 'Erreur update status' });
 
-        const dateStr = appointment.date.toISOString().split('T')[0]; // ex: '2025-07-21'
-        const heure = appointment.heure.slice(0, 5); // ex: '10:00'
-        const startDateTime = new Date(`${dateStr}T${heure}:00+02:00`).toISOString();
+      // ✅ Ici on crée les vrais objets Date
+      const start = new Date(appointment.date);
+      const end = new Date(start.getTime() + 60 * 60 * 1000);
 
-        const [h, m] = heure.split(':');
-        const endHour = (parseInt(h) + 1).toString().padStart(2, '0');
-        const endDateTime = new Date(`${dateStr}T${endHour}:${m}:00+02:00`).toISOString();
+      if (isNaN(start) || isNaN(end)) {
+        console.error("⛔ Mauvais format de date ou heure :", appointment.date, appointment.heure);
+        return res.status(500).json({ error: 'Format date/heure invalide' });
+      }
 
-        const event = await createEvent({
-          summary: `RDV Tattoo avec ${appointment.name}`,
-          description: appointment.message,
-          start: {
-            dateTime: startDateTime,
-            timeZone: 'Europe/Paris'
-          },
-          end: {
-            dateTime: endDateTime,
-            timeZone: 'Europe/Paris'
-          }
-        });
+      const event = await createEvent({
+        summary: `RDV Tattoo avec ${appointment.name}`,
+        description: appointment.message,
+        start: {
+          dateTime: start.toISOString(),
+          timeZone: 'Europe/Paris'
+        },
+        end: {
+          dateTime: end.toISOString(),
+          timeZone: 'Europe/Paris'
+        }
+      });
 
         // Test: Envoi d'un email de confirmation (commenté pour l'instant)
         /*
