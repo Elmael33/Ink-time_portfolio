@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS appointments (
   date DATE NOT NULL,
   heure TIME NULL,
   message TEXT,
-  ALTER TABLE appointments ADD COLUMN phone VARCHAR(20);
+  phone VARCHAR(20),
+  status ENUM('en_attente', 'confirme') DEFAULT 'en_attente',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

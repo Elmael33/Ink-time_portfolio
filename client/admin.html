@@ -96,53 +96,70 @@
 <header>Admin Dashboard</header>
 
 <main>
-  <table>
-    <thead>
-      <tr>
-        <th>Client</th>
-        <th>Date</th>
-        <th>Email</th>
-        <th>Description</th>
-        <th>Fichier</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td data-label="Client">Ziri Houamdi</td>
-        <td data-label="Date">15/07/2025</td>
-        <td data-label="Email"><a href="mailto:lena.anderson@example.com">Zirihouamdi@gmail.com</a></td>
-        <td data-label="Description">Dragon</td>
-        <td data-label="Fichier"><a href="/uploads/design.jpg" download>design.jpg</a></td>
-        <td data-label="Actions" class="actions">
-          <button class="validate">Valider</button>
-          <button class="delete">Supprimer</button>
-        </tr>
-      <tr>
-        <td data-label="Client">Victoire Boutin</td>
-        <td data-label="Date">19/07/2025</td>
-        <td data-label="Email"><a href="mailto:lena.anderson@example.com">Victoire.boutin@gmail.com</a></td>
-        <td data-label="Description">Fleur</td>
-        <td data-label="Fichier"><a href="/uploads/design.jpg" download>design.jpg</a></td>
-        <td data-label="Actions" class="actions">
-          <button class="validate">Valider</button>
-          <button class="delete">Supprimer</button>
-      </tr>
-        <tr>
-        <td data-label="Client">Mario Balloteli</td>
-        <td data-label="Date">23/07/2025</td>
-        <td data-label="Email"><a href="mailto:lena.anderson@example.com">Mario.balotelli@gmail.com</a></td>
-        <td data-label="Description">Ballon d'or</td>
-        <td data-label="Fichier"><a href="/uploads/design.jpg" download>design.jpg</a></td>
-        <td data-label="Actions" class="actions">
-          <button class="validate">Valider</button>
-          <button class="delete">Supprimer</button>
-        </tr>
-
-      <!-- d'autres lignes peuvent être générées dynamiquement -->
-    </tbody>
-  </table>
+  <table id="appointmentsTable">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Email</th>
+      <th>Date</th>
+      <th>Heure</th>
+      <th>Message</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="appointmentsBody"></tbody>
+</table>
 </main>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tbody = document.querySelector("tbody");
 
+    try {
+      const res = await fetch("/api/appointments");
+      const rdvs = await res.json();
+
+      tbody.innerHTML = "";
+
+      rdvs.forEach(rdv => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td data-label="Client">${rdv.name}</td>
+          <td data-label="Date">${rdv.date}</td>
+          <td data-label="Email"><a href="mailto:${rdv.email}">${rdv.email}</a></td>
+          <td data-label="Description">${rdv.message || "—"}</td>
+          <td data-label="Fichier">—</td>
+          <td class="actions" data-label="Actions">
+            <button class="validate" data-id="${rdv.id}">Valider</button>
+            <button class="delete" data-id="${rdv.id}">Supprimer</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Action buttons
+      document.querySelectorAll(".validate").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+          const id = e.target.dataset.id;
+          if (!confirm("Valider ce RDV ?")) return;
+          await fetch(`/api/appointments/${id}/validate`, { method: "PUT" });
+          location.reload();
+        });
+      });
+
+      document.querySelectorAll(".delete").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+          const id = e.target.dataset.id;
+          if (!confirm("Supprimer ce RDV ?")) return;
+          await fetch(`/api/appointments/${id}`, { method: "DELETE" });
+          location.reload();
+        });
+      });
+
+    } catch (err) {
+      console.error("❌ Erreur chargement des RDV :", err);
+    }
+  });
+</script>
 </body>
 </html>

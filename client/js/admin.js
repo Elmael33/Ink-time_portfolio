@@ -1,52 +1,58 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const res = await fetch('/api/appointments');
-  const data = await res.json();
+  const tableBody = document.getElementById('appointmentsBody');
 
-  const tbody = document.querySelector('tbody');
-  tbody.innerHTML = '';
+  try {
+    const res = await fetch('/api/appointments');
+    const data = await res.json();
 
-  data.forEach(rdv => {
-    const tr = document.createElement('tr');
+    data.forEach(appointment => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${appointment.name}</td>
+        <td>${appointment.email}</td>
+        <td>${new Date(appointment.date).toLocaleDateString()}</td>
+        <td>${appointment.heure.slice(0, 5)}</td>
+        <td>${appointment.message || ''}</td>
+        <td>${appointment.status}</td>
+        <td>
+          <button class="validate-btn" data-id="${appointment.id}" ${appointment.status === 'confirme' ? 'disabled' : ''}>Valider</button>
+          <button class="delete-btn" data-id="${appointment.id}">Supprimer</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
 
-    tr.innerHTML = `
-      <td data-label="Client">${rdv.name}</td>
-      <td data-label="Date">${formatDate(rdv.date)} ${rdv.heure}</td>
-      <td data-label="Email"><a href="mailto:${rdv.email}">${rdv.email}</a></td>
-      <td data-label="Description">${rdv.message}</td>
-      <td data-label="Fichier">
-        ${rdv.file ? `<a href="/uploads/${rdv.file}" download>${rdv.file}</a>` : '—'}
-      </td>
-      <td data-label="Actions" class="actions">
-        <button class="validate" data-id="${rdv.id}">Valider</button>
-        <button class="delete" data-id="${rdv.id}">Supprimer</button>
-      </td>
-    `;
+    // Gére les clics
+    document.querySelectorAll('.validate-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const id = button.getAttribute('data-id');
+        try {
+          const res = await fetch(`/api/appointments/${id}/validate`, { method: 'PUT' });
+          const result = await res.json();
+          alert(result.message || 'RDV validé');
+          location.reload();
+        } catch (err) {
+          alert('Erreur validation');
+        }
+      });
+    });
 
-    tbody.appendChild(tr);
-  });
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const id = button.getAttribute('data-id');
+        if (!confirm('Supprimer ce rendez-vous ?')) return;
 
-  // Actions
-  document.querySelectorAll('.delete').forEach(btn =>
-    btn.addEventListener('click', async (e) => {
-      const id = e.target.dataset.id;
-      if (confirm("Confirmer suppression ?")) {
-        const res = await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
-        if (res.ok) location.reload();
-        else alert("Erreur suppression");
-      }
-    })
-  );
-
-  document.querySelectorAll('.validate').forEach(btn =>
-    btn.addEventListener('click', (e) => {
-      const id = e.target.dataset.id;
-      alert(`RDV ${id} validé ✅`);
-      // Tu peux ici faire un PUT si tu veux stocker la validation en DB plus tard
-    })
-  );
+        try {
+          const res = await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
+          const result = await res.json();
+          alert(result.message || 'Supprimé');
+          location.reload();
+        } catch (err) {
+          alert('Erreur suppression');
+        }
+      });
+    });
+  } catch (err) {
+    console.error('Erreur chargement RDV:', err);
+  }
 });
-
-function formatDate(dateStr) {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('fr-FR');
-}

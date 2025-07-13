@@ -29,11 +29,10 @@
   <!-- Formulaire -->
   <section class="form-section">
     <form id="appointmentForm" enctype="multipart/form-data">
-      <input type="text" name="nom" placeholder="Nom" required />
+      <input type="text" name="name" placeholder="Nom" required />
       <input type="email" name="email" placeholder="Email" required />
       <input type="date" name="date" required />
       <input type="time" name="heure" required />
-
       <textarea name="description" placeholder="Description du tatouage" required></textarea>
 
       <label for="image">Image de référence (optionnel)</label>
@@ -48,7 +47,7 @@
     e.preventDefault();
 
     const data = {
-      nom: e.target.nom.value,
+      name: e.target.name.value,
       email: e.target.email.value,
       date: e.target.date.value,
       heure: e.target.heure.value,
