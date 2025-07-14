@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Réservation - InkTime</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation - InkTime</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Navigation -->
+    <!-- Navigation -->
   <nav class="navbar">
     <div class="logo">InkTime</div>
     <ul class="nav-links">
@@ -20,52 +21,410 @@
       <li><a href="#">Contact</a></li>
     </ul>
   </nav>
+    <style>
+      /* NAVIGATION */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #eee;
+  
+}
 
-  <header class="hero small">
-    <h1>Réserve ton rendez-vous</h1>
-    <p>Personnalise ton tattoo avec l’artiste</p>
-  </header>
+.logo {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
 
-  <!-- Formulaire -->
-  <section class="form-section">
-    <form id="appointmentForm" enctype="multipart/form-data">
-      <input type="text" name="name" placeholder="Nom" required />
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="date" name="date" required />
-      <input type="time" name="heure" required />
-      <textarea name="description" placeholder="Description du tatouage" required></textarea>
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
 
-      <label for="image">Image de référence (optionnel)</label>
-      <input type="file" id="image" name="image" accept="image/*" />
+.nav-links a {
+  font-weight: 500;
+  color: #333;
+}
 
-      <button type="submit">Réserver</button>
-    </form>
-  </section>
+.nav-links a:hover {
+  color: #000;
+}
 
-  <script>
-  document.getElementById("appointmentForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .main-content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .reservation-info {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #667eea;
+        }
+        .calendar-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .container {
+                margin: 10px;
+            }
+            .header {
+                padding: 20px;
+            }
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700;">Réservation</h1>
+            <p style="margin: 10px 0 0 0; font-size: 1.2rem; opacity: 0.9;">Choisissez votre date et remplissez le formulaire</p>
+        </div>
 
-    const data = {
-      name: e.target.name.value,
-      email: e.target.email.value,
-      date: e.target.date.value,
-      heure: e.target.heure.value,
-      message: e.target.description.value,
+        <div class="main-content">
+            <!-- Section Calendrier -->
+            <div class="calendar-container">
+                <div id="calendar-root"></div>
+            </div>
+
+            <!-- Section Formulaire -->
+            <div class="form-section">
+                <h2 style="margin-top: 0; color: #333;">Informations de réservation</h2>
+                
+                <form id="reservationForm">
+                    <div class="form-group">
+                        <label for="selectedDate">Date sélectionnée</label>
+                        <input type="text" id="selectedDate" name="selectedDate" readonly placeholder="Sélectionnez une date dans le calendrier">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeSlot">Créneau horaire</label>
+                        <select id="timeSlot" name="timeSlot" required>
+                            <option value="">Choisir un créneau</option>
+                            <option value="09:00">09:00 - 10:00</option>
+                            <option value="10:00">10:00 - 11:00</option>
+                            <option value="11:00">11:00 - 12:00</option>
+                            <option value="14:00">14:00 - 15:00</option>
+                            <option value="15:00">15:00 - 16:00</option>
+                            <option value="16:00">16:00 - 17:00</option>
+                            <option value="17:00">17:00 - 18:00</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fullName">Nom complet</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Votre nom complet">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="votre@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="06 12 34 56 78">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes supplémentaires</label>
+                        <textarea id="notes" name="notes" rows="4" placeholder="Informations complémentaires (optionnel)"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Confirmer la réservation</button>
+                </form>
+
+                <div id="reservationInfo" class="reservation-info" style="display: none;">
+                    <h3 style="margin-top: 0; color: #667eea;">Récapitulatif de votre réservation</h3>
+                    <div id="summaryContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/babel">
+
+  function formatDateToSQL(dateStr) {
+  const parts = dateStr.split('/');
+  return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+}
+  const { useState, useEffect } = React;
+
+  const horairesFixes = [
+    "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"
+  ];
+
+  const TimeSlots = ({ selectedDate, onSelect }) => {
+    const [dispo, setDispo] = useState([]);
+
+    useEffect(() => {
+  if (!selectedDate) return;
+
+  axios.get(`/api/appointments/slots/${selectedDate}`)
+    .then(res => {
+      const reservedSlots = (res.data || []).map(h => h.slice(0, 5)); // ← CORRECTION ici !
+      const disponibles = horairesFixes.filter(h => !reservedSlots.includes(h));
+      setDispo(disponibles);
+      console.log("Créneaux réservés (filtrés):", reservedSlots);
+    })
+    .catch(err => {
+      console.error("Erreur lors du chargement des créneaux:", err);
+      setDispo(horairesFixes);
+    });
+}, [selectedDate]);
+
+
+    if (!selectedDate) return null;
+
+    return (
+      <div className="form-group">
+        <label>Créneau horaire disponible</label>
+        <select id="timeSlot" name="timeSlot" required>
+          <option value="">Choisir un créneau</option>
+          {dispo.map((h, i) => (
+            <option key={i} value={h}>{h} - {parseInt(h) + 1}:00</option>
+          ))}
+        </select>
+      </div>
+    );
+  };
+
+  const CalendarComponent = () => {
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+    const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    const daysOfWeek = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+
+    const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+    const getFirstDayOfMonth = (month, year) => {
+      const firstDay = new Date(year, month, 1).getDay();
+      return firstDay === 0 ? 6 : firstDay - 1;
     };
 
-    const res = await fetch("/api/appointments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+    const calendarDays = () => {
+      const days = [];
+      const first = getFirstDayOfMonth(currentMonth, currentYear);
+      const total = getDaysInMonth(currentMonth, currentYear);
+      for (let i = 0; i < first; i++) days.push(null);
+      for (let i = 1; i <= total; i++) days.push(i);
+      return days;
+    };
+
+    const handleDateClick = (day) => {
+      if (!day) return;
+      const dateString = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      setSelectedDate(dateString);
+      const input = document.getElementById('selectedDate');
+      if (input) input.value = new Date(dateString).toLocaleDateString('fr-FR');
+    };
+
+    const isToday = (d) => {
+      const t = new Date();
+      return d === t.getDate() && currentMonth === t.getMonth() && currentYear === t.getFullYear();
+    };
+
+    const isPastDate = (d) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return new Date(currentYear, currentMonth, d) < today;
+    };
+
+    return (
+      <>
+        <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
+            <button onClick={() => {
+              if (!(currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear())) {
+                if (currentMonth === 0) {
+                  setCurrentMonth(11);
+                  setCurrentYear(y => y - 1);
+                } else {
+                  setCurrentMonth(m => m - 1);
+                }
+              }
+            }}>◀</button>
+            <h2>{months[currentMonth]} {currentYear}</h2>
+            <button onClick={() => {
+              if (currentMonth === 11) {
+                setCurrentMonth(0);
+                setCurrentYear(y => y + 1);
+              } else {
+                setCurrentMonth(m => m + 1);
+              }
+            }}>▶</button>
+          </div>
+          <div className="grid grid-cols-7 bg-gray-50 border-b">
+            {daysOfWeek.map(day => <div key={day} className="p-2 text-center text-sm font-medium text-gray-700">{day}</div>)}
+          </div>
+          <div className="grid grid-cols-7">
+            {calendarDays().map((day, idx) => (
+              <div
+                key={idx}
+                className={`h-12 border flex items-center justify-center text-sm ${day ? 'cursor-pointer' : ''} ${isToday(day) ? 'bg-blue-100 font-bold text-blue-600' : ''} ${selectedDate?.endsWith(String(day).padStart(2, '0')) ? 'bg-blue-600 text-white' : ''} ${isPastDate(day) ? 'text-gray-400' : ''}`}
+                onClick={() => !isPastDate(day) && handleDateClick(day)}
+              >{day}</div>
+            ))}
+          </div>
+        </div>
+
+        <TimeSlots selectedDate={selectedDate} />
+      </>
+    );
+  };
+
+  ReactDOM.render(<CalendarComponent />, document.getElementById("calendar-root"));
+
+  // Gestion du formulaire
+  let isSubmitting = false; // Variable pour éviter les doubles clics
+
+document.getElementById("reservationForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+  
+  // Protection contre double soumission
+  if (isSubmitting) return;
+  isSubmitting = true;
+  
+  const submitBtn = this.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Réservation en cours...';
+  
+  const formData = new FormData(this);
+  const data = Object.fromEntries(formData);
+  data.date = formatDateToSQL(data.selectedDate);
+
+  if (!data.selectedDate || !data.timeSlot) {
+    alert("Veuillez sélectionner une date et un créneau horaire.");
+    isSubmitting = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Confirmer la réservation';
+    return;
+  }
+
+  try {
+    const res = await axios.post("/api/appointments", {
+      date: data.date,
+      heure: data.timeSlot,
+      name: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      message: data.notes || ""
     });
 
-    if (res.ok) {
-      window.location.href = "confirmation.html";
+    document.getElementById("summaryContent").innerHTML = `
+      <p><strong>Date:</strong> ${data.selectedDate}</p>
+      <p><strong>Créneau:</strong> ${data.timeSlot}</p>
+      <p><strong>Nom:</strong> ${data.fullName}</p>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>Téléphone:</strong> ${data.phone}</p>
+      ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ''}
+    `;
+    document.getElementById("reservationInfo").style.display = "block";
+    this.reset();
+    document.getElementById("selectedDate").value = "";
+    
+  } catch (err) {
+    if (err.response?.status === 409) {
+      alert("Ce créneau est déjà réservé. Veuillez en choisir un autre.");
     } else {
-      alert("Erreur lors de la prise de rendez-vous");
+      alert("Erreur lors de la réservation");
     }
-  });
+    console.error(err);
+  } finally {
+    isSubmitting = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Confirmer la réservation';
+  }
+});
+  console.log("Date envoyée au backend:", data.date);
 </script>
 
 </body>

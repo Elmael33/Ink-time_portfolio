@@ -14,6 +14,14 @@ const AppointmentModel = {
     ], callback);
   },
 
+  getConfirmedSlotsByDate: (date, callback) => {
+  const sql = "SELECT heure FROM appointments WHERE date = ? AND status = 'confirme'";
+  db.query(sql, [date], (err, results) => {
+    if (err) return callback(err);
+    callback(null, results.map(r => r.heure));
+  });
+  },
+
   getAll: (callback) => {
     db.query('SELECT * FROM appointments ORDER BY created_at DESC', callback);
   },

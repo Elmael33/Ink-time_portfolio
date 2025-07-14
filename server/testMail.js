@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 transporter.sendMail({
   from: process.env.EMAIL_USER,
-  to: "mael.salet33@gmail.com",
+  to: "ink.time.book@gmail.com",
   subject: "Test Nodemailer",
   text: "testing nodemailer",
 }, (err, info) => {

@@ -1,20 +1,44 @@
 const { createEvent, getAvailableSlots } = require('../utils/calendarService');
 const Appointment = require('../models/appointmentModel');
 const AppointmentModel = require('../models/appointmentModel');
-/*const { sendConfirmationEmail } = require('../utils/sendEmail');$*/
+const { sendConfirmationEmail } = require('../utils/sendEmail');
+const db = require('../config/db');
 
 exports.createAppointment = async (req, res) => {
   const { name, email, date, heure, message, phone } = req.body;
-  if (!name || !email || !date || !heure || !message) {
+  
+  if (!name || !email || !date || !heure) {
     return res.status(400).json({ error: 'Tous les champs sont requis.' });
   }
+  
   console.log("RDV reçu :", req.body);
   
   try {
+    // Vérification si le créneau est déjà pris
+    const checkQuery = 'SELECT COUNT(*) as count FROM appointments WHERE date = ? AND heure = ?';
+    const isBooked = await new Promise((resolve, reject) => {
+      db.query(checkQuery, [date, heure], (err, result) => {
+        if (err) reject(err);
+        else resolve(result[0].count > 0);
+      });
+    });
+
+    if (isBooked) {
+      return res.status(409).json({ error: 'Ce créneau est déjà réservé' });
+    }
+
+    // Insertion du RDV
     const result = await new Promise((resolve, reject) => {
       Appointment.create({ name, email, date, heure, message, phone, status: 'en_attente' }, (err, result) => {
-        if (err) reject(err);
-        else resolve(result);
+        if (err) {
+          // Si erreur de contrainte unique, on gère proprement
+          if (err.code === 'ER_DUP_ENTRY') {
+            return reject(new Error('SLOT_TAKEN'));
+          }
+          reject(err);
+        } else {
+          resolve(result);
+        }
       });
     });
 
@@ -25,7 +49,12 @@ exports.createAppointment = async (req, res) => {
     });
 
   } catch (err) {
-    console.error('❌ Erreur complète Google Calendar :', err);
+    console.error('❌ Erreur création RDV :', err);
+    
+    if (err.message === 'SLOT_TAKEN') {
+      return res.status(409).json({ error: 'Ce créneau est déjà réservé' });
+    }
+    
     res.status(500).json({ error: 'Erreur serveur (RDV)' });
   }
 };
@@ -116,13 +145,11 @@ exports.validateAppointment = async (req, res) => {
       });
 
         // Test: Envoi d'un email de confirmation (commenté pour l'instant)
-        /*
         await sendConfirmationEmail(appointment.email, {
           date: appointment.date,
           heure: appointment.heure,
           description: appointment.message
         });
-        */
 
         res.status(200).json({ message: 'Rendez-vous validé', eventLink: event.htmlLink });
       });
@@ -131,5 +158,29 @@ exports.validateAppointment = async (req, res) => {
       console.error('Erreur validation :', error);
       res.status(500).json({ error: 'Erreur serveur validation' });
     }
+  });
+};
+
+exports.getReservedSlots = (req, res) => {
+  const date = req.params.date;
+
+  if (!date) {
+    return res.status(400).json({ error: "Date manquante" });
+  }
+
+  const query = `
+    SELECT heure FROM appointments
+    WHERE date = ? AND status = "confirme"
+  `;
+
+  db.query(query, [date], (err, results) => {
+    if (err) {
+      console.error("Erreur DB créneaux réservés:", err);
+      return res.status(500).json({ error: "Erreur serveur" });
+    }
+
+    // ✅ ICI tu peux mapper `results` car il existe dans ce scope
+    const reserved = results.map(r => r.heure.slice(0, 5)); // supprime les secondes
+    res.json(reserved);
   });
 };

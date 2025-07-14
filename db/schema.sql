@@ -19,3 +19,5 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('admin', 'artist') DEFAULT 'artist',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE appointments ADD CONSTRAINT unique_slot UNIQUE (date, heure);
