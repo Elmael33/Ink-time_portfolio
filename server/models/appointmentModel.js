@@ -37,6 +37,11 @@ const AppointmentModel = {
       if (err) return callback(err);
       callback(null, results[0]);
     });
+  },
+  
+  delete: (id, callback) => {
+    const sql = 'DELETE FROM appointments WHERE id = ?';
+    db.query(sql, [id], callback);
   }
 };
 

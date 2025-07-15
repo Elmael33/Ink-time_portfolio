@@ -19,8 +19,8 @@ async function createEvent({ summary, description, start, end }) {
   const event = {
     summary,
     description,
-    start,  // 👈 PAS de modification ici
-    end     // 👈 PAS de modification ici
+    start, 
+    end     
   };
 
   const response = await calendar.events.insert({
