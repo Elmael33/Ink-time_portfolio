@@ -121,15 +121,25 @@ exports.validateAppointment = async (req, res) => {
   try {
     AppointmentModel.updateStatus(id, 'confirme', async (err) => {
       if (err) return res.status(500).json({ error: 'Erreur update status' });
-
-      // ✅ Ici on crée les vrais objets Date
-      const start = new Date(appointment.date);
-      const end = new Date(start.getTime() + 60 * 60 * 1000);
+      
+      const dateStr = appointment.date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+      const timeStr = appointment.heure; // Format HH:MM:SS ou HH:MM
+        
+        // Créer la datetime complète
+      const start = new Date(`${dateStr}T${timeStr}`);
+      const end = new Date(start.getTime() + 60 * 60 * 1000); // +1 heure
 
       if (isNaN(start) || isNaN(end)) {
         console.error("⛔ Mauvais format de date ou heure :", appointment.date, appointment.heure);
         return res.status(500).json({ error: 'Format date/heure invalide' });
       }
+
+      console.log("📅 Dates calculées:", {
+          dateStr,
+          timeStr,
+          start: start.toISOString(),
+          end: end.toISOString()
+        });
 
       const event = await createEvent({
         summary: `RDV Tattoo avec ${appointment.name}`,
@@ -146,6 +156,7 @@ exports.validateAppointment = async (req, res) => {
 
         // Test: Envoi d'un email de confirmation (commenté pour l'instant)
         await sendConfirmationEmail(appointment.email, {
+          name: appointment.name,
           date: appointment.date,
           heure: appointment.heure,
           description: appointment.message
@@ -179,7 +190,6 @@ exports.getReservedSlots = (req, res) => {
       return res.status(500).json({ error: "Erreur serveur" });
     }
 
-    // ✅ ICI tu peux mapper `results` car il existe dans ce scope
     const reserved = results.map(r => r.heure.slice(0, 5)); // supprime les secondes
     res.json(reserved);
   });
